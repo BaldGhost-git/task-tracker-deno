@@ -1,8 +1,13 @@
+#!/usr/bin/env -S deno run --allow-read --allow-sys --allow-env --allow-net
+
 import { addTask } from "./bin/task_add.ts";
 import { deleteTask } from "./bin/task_delete.ts";
 import { readTasks } from "./bin/task_list.ts";
 import { markTask } from "./bin/task_mark_status.ts";
 import { updateTask } from "./bin/task_update.ts";
+import mongoose from "npm:mongoose@8.14.0";
+
+await mongoose.connect("mongodb://localhost:27017");
 
 const command = Deno.args[0];
 switch (command) {
@@ -66,5 +71,9 @@ switch (command) {
     console.error(
       `${command}: command not found\n try "task-tracker help" to see list of commands`,
     );
-    // process.exit(1);
+    Deno.exit(1);
 }
+
+await mongoose.disconnect();
+Deno.exit(0);
+
